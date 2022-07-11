@@ -26,10 +26,16 @@ public class TestRPGScoreboard {
         Scoreboard scoreboard = scoreboardManager.getNewScoreboard();
 
         Objective objective = scoreboard.registerNewObjective("TestRPG", "dummy", ChatColor.AQUA + "TestRPG");
+
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+
         RoleManager.getMainRole(user).ifPresent(role -> objective.getScore(ChatColor.YELLOW + "本職 : %mainRole%".replace("%mainRole%", role.getDisplayName())).setScore(15));
-        objective.getScore(ChatColor.GREEN + "サブ職 : %subRoles%".replace("%subRoles%", RoleManager.getSubRole(user).stream().map(Role::getDisplayName).collect(Collectors.joining(" ")))).setScore(14);
-        objective.getScore(ChatColor.BLUE + "MP : %MP%".replace("%MP%", user.getMagicPoint().toString())).setScore(13);
+
+        if (RoleManager.getSubRole(user).size() != 0) {
+            objective.getScore(ChatColor.GREEN + "サブ職 : %subRoles%".replace("%subRoles%", RoleManager.getSubRole(user).stream().map(Role::getDisplayName).collect(Collectors.joining(" ")))).setScore(14);
+        }
+
+        objective.getScore(ChatColor.BLUE + "MP : %MP%".replace("%MP%", ((Integer) user.getMagicPoint()).toString())).setScore(13);
 
         return scoreboard;
     }

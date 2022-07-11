@@ -4,6 +4,7 @@ import com.github.tsuoihito.testrpg.commands.TestRPGCommand;
 import com.github.tsuoihito.testrpg.data.UserData;
 import com.github.tsuoihito.testrpg.listeners.AbilityUseListener;
 import com.github.tsuoihito.testrpg.listeners.PlayerJoinListener;
+import com.github.tsuoihito.testrpg.utils.CoolTimeScheduler;
 import com.github.tsuoihito.testrpg.utils.ScoreboardScheduler;
 import com.github.tsuoihito.testrpg.utils.TestRPGScoreboard;
 import lombok.Getter;
@@ -22,7 +23,7 @@ public final class TestRPG extends JavaPlugin {
         plugin = this;
         register();
         testRPGScoreboard = new TestRPGScoreboard();
-        new ScoreboardScheduler().runTaskTimer(this, 0, 20);
+        startTask();
     }
 
     @Override
@@ -33,6 +34,11 @@ public final class TestRPG extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new AbilityUseListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
         getCommand("testrpg").setExecutor(new TestRPGCommand());
+    }
+
+    private void startTask() {
+        new ScoreboardScheduler().runTaskTimer(this, 0, 20);
+        new CoolTimeScheduler().runTaskTimer(this, 0, 20);
     }
 
     public static TestRPG getPlugin() {

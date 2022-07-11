@@ -1,6 +1,7 @@
 package com.github.tsuoihito.testrpg.utils;
 
 import com.github.tsuoihito.testrpg.model.User;
+import com.github.tsuoihito.testrpg.model.UserRole;
 import com.github.tsuoihito.testrpg.model.role.MainRole;
 import com.github.tsuoihito.testrpg.model.role.Role;
 import com.github.tsuoihito.testrpg.model.role.SubRole;
@@ -12,27 +13,27 @@ import java.util.stream.Collectors;
 public class RoleManager {
 
     public static boolean setMainRole(User user, MainRole mainRole) {
-        if (user.getRoles().keySet().stream().anyMatch(role -> role instanceof MainRole)) {
+        if (user.getUserRoles().stream().anyMatch(userRole -> userRole.getRole() instanceof MainRole)) {
             return false;
         }
-        user.getRoles().put(mainRole, 0);
+        user.getUserRoles().add(new UserRole(mainRole));
         return true;
     }
 
     public static boolean setSubRole(User user, SubRole subRole) {
-        if (user.getRoles().size() > 3) {
+        if (user.getUserRoles().size() > 3) {
             return false;
         }
-        user.getRoles().put(subRole, 0);
+        user.getUserRoles().add(new UserRole(subRole));
         return true;
     }
 
     public static Optional<Role> getMainRole(User user) {
-        return user.getRoles().keySet().stream().filter(role -> role instanceof MainRole).findAny();
+        return user.getUserRoles().stream().map(UserRole::getRole).filter(role -> role instanceof MainRole).findAny();
     }
 
     public static List<Role> getSubRole(User user) {
-        return user.getRoles().keySet().stream().filter(role -> role instanceof SubRole).collect(Collectors.toList());
+        return user.getUserRoles().stream().map(UserRole::getRole).filter(role -> role instanceof SubRole).collect(Collectors.toList());
     }
 
 }

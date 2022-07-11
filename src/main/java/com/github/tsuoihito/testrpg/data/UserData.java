@@ -1,14 +1,14 @@
 package com.github.tsuoihito.testrpg.data;
 
 import com.github.tsuoihito.testrpg.model.User;
-import lombok.RequiredArgsConstructor;
+import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@RequiredArgsConstructor
+@Data
 public class UserData {
     private final List<User> users = new ArrayList<>();
 
