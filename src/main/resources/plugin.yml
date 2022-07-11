@@ -1,0 +1,14 @@
+name: TestRPG
+version: '${project.version}'
+main: com.github.tsuoihito.testrpg.TestRPG
+api-version: 1.16
+authors: [ tsuoihito ]
+website: https://github.com/tamago-saba/TestRPG/
+
+commands:
+  testrpg:
+    permission: testrpg.command
+
+permissions:
+  testrpg.command:
+    default: op
