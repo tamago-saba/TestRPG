@@ -7,18 +7,43 @@ import com.github.tsuoihito.testrpg.model.role.SubRole;
 import com.github.tsuoihito.testrpg.utils.RoleManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
+import org.bukkit.entity.HumanEntity;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public class TestRPGCommand implements CommandExecutor {
+public class TestRPGCommand implements TabExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
         if (args.length == 0) {
             invalidSyntax(sender);
+            return true;
+        }
+
+        // /testrpg givemp <player> <mp>
+        if (args[0].equals("givemp")) {
+            if (args.length != 3) {
+                invalidSyntax(sender);
+                return true;
+            }
+            Optional<User> user = TestRPG.getPlugin().getUserData().getUser(args[1]);
+            if (!user.isPresent()) {
+                sender.sendMessage(ChatColor.RED + "ユーザーデータが見つかりませんでした");
+                return true;
+            }
+            try {
+                user.get().setMagicPoint(Integer.parseInt(args[2]));
+            } catch (NumberFormatException e) {
+                sender.sendMessage(ChatColor.RED + "MPが有効な値ではありません");
+                return true;
+            }
+            sender.sendMessage(ChatColor.GREEN + "MPが正常に設定されました");
             return true;
         }
 
@@ -74,5 +99,13 @@ public class TestRPGCommand implements CommandExecutor {
 
     private void invalidSyntax(CommandSender sender) {
         sender.sendMessage(ChatColor.RED + "構文が間違っています");
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+        if (args.length == 1) {
+            return Stream.of("givemp", "mainrole", "subrole").filter(name -> name.startsWith(args[0])).collect(Collectors.toList());
+        }
+        return TestRPG.getPlugin().getServer().getOnlinePlayers().stream().map(HumanEntity::getName).collect(Collectors.toList());
     }
 }
